@@ -1,0 +1,270 @@
+\documentclass{beamer}
+
+\mode<presentation>
+{
+	\usetheme{metropolis}
+}
+
+\usepackage[english]{babel}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{times}
+\usepackage[T1]{fontenc}
+
+\usepackage{amssymb, amsmath, amscd}
+\usepackage{mathrsfs, amsfonts}
+
+\usecolortheme{rose}
+%\usepackage{color}
+%\usepackage[usenames,dvipsnames]{color}
+\bibliography{dlp v20171212}
+
+\title[Short Paper Title]
+{A Bird's Eye View\\on Discrete Logarithm Problems\\over Finite Fields}
+
+\author[He]
+{Xiao'ou He}
+
+\institute[Universities of Somewhere and Elsewhere]
+{Key Laboratory of Mathematics Mechanization, AMSS}
+
+\date[Annual 2017]
+{December 14, 2017}
+
+\AtBeginSubsection[]
+{
+  \begin{frame}<beamer>{Outline}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+  \tableofcontents[pausesections]
+\end{frame}
+
+%%% =================================================================================== %%%
+\section{Motivation}
+
+	\subsection{Origin of The Problem in Cryptography}
+		\begin{frame}{Public-Key Cryptography}
+			\begin{itemize}
+				\item
+					Proposed by Diffie and Hellman, 1976%\cite{DH76}
+				\item
+					Based on number-theoretical hard problems
+					\begin{itemize}
+						\item
+							Integer Factorizations
+						\item
+							\alert{Discrete Logarithms}\\
+							Concerning with two class of groups:
+							\begin{enumerate}
+								\item
+									Elliptic curves
+								\item
+									\alert{Multiplicative groups of finite fields}
+							\end{enumerate}
+					\end{itemize}
+			\end{itemize}
+		\end{frame}
+%%% ----------------------------------------------------------------------------------- %%%
+	\subsection{Exposition of The Problem}
+		% I suppose that the vocabulary "exposition" seems more high-end than the vougor "description"
+		\begin{frame}{Case in General}
+			\begin{itemize}
+				\item
+					Cyclic group: $(G, \cdot) = \langle g\rangle$.
+				\item
+					Exponential v. Logarithm
+					\begin{itemize}
+						\item
+							$x \mapsto h = g^x$
+						\item
+							$h \mapsto x = \log_g{h}$
+					\end{itemize}
+				\item
+					Generic Algorithms:\\
+					\begin{itemize}
+						\item
+							Pohlig-Hellman: Two reductions - CRT and $p^e$ to $p$
+						\item
+							Collision Making: Baby-step giant-step, Pollard's rho Method, etc.
+					\end{itemize}
+			\end{itemize}
+		\end{frame}
+		
+		\begin{frame}{Case over Finite Fields}
+			\begin{itemize}
+				\item
+					Given: $Q$, $g$ and $h$, where $\langle g\rangle = \mathbb{F}_Q^\times$ containing $h$.
+				\item
+					Find: $\log_gh$.
+			\end{itemize}
+		\end{frame}
+%%% =================================================================================== %%%
+\section{Previous Work}
+%%% ----------------------------------------------------------------------------------- %%%
+	\subsection{Preliminaries}
+		\begin{frame}{Complexity}
+			\begin{block}{The $\mathcal{L}$ Notation}
+				$$\mathcal{L}_Q(\beta, c) = \exp((c + o(1))(\log Q)^\beta (\log\log Q)^{1-\beta})$$
+				\begin{itemize}
+					\item 
+						$c>0$ and $0 \le \beta \le 1$
+					\item
+						$\mathcal{L}_Q(\alert{0}, c) = (\log Q)^{c + o(1)} = \text{poly}(\log Q$),\\
+						$\mathcal{L}_Q(\alert{1}, c) = (\exp(\log Q))^{c+o(1)} = \text{exp}(\log Q)$. 
+					\item
+						When $0<\beta<1$, $\mathcal{L}_Q(\beta, c)$ is \textbf{sub-exponential}.
+				\end{itemize}
+			\end{block}
+			\begin{block}{Quasi-poly}
+				$(\log Q)^{O(\log\log Q)}$ is \textbf{quasi-polynomial}, 
+				which is smaller than any $\mathcal{L}_Q(\beta, \cdot)$ for $\beta >0$.
+			\end{block}
+		\end{frame}
+%%% ----------------------------------------------------------------------------------- %%%	
+	\subsection{From Sub-exp to Quasi-poly}		
+		\begin{frame}{Overview}
+			\begin{block}{$\mathcal{L}_Q(\alert{\frac{1}{2}}, \cdot)$ \textbf{Index Calculus Method}}
+				Adleman, 1979 and Pohlig, 1977 independently
+			\end{block}
+			\begin{block}{$\mathcal{L}_Q(\alert{\frac{1}{3}}, \cdot)$ by \textbf{Coppersmith, 1984}}
+				\begin{itemize}
+						\item
+							Originally $\mathbb{F}_{2^n}$
+						\item
+							More general: FFS by Adleman and Huang, 1999
+						\item
+							Medium and large char.: NFS by Gordon, 1993
+				\end{itemize}
+			\end{block}
+			\begin{block}{$\mathcal{L}_Q(\alert{\frac{1}{4}}, \cdot)$ Joux, 2013 to \alert{quasi-poly} by BGJT, 2014}
+				\begin{itemize}
+					\item 
+						For small char.: Take $\mathbb{F}_{2^n}$ for instace. Roughly $p \leq \mathcal{L}_Q(\frac{1}{3}, \cdot)$.
+					\item
+						Heuristics
+				\end{itemize}
+			\end{block}
+		\end{frame}
+
+		\begin{frame}{Smooth - Set A Bound}
+			\begin{definition}
+				Given $B>0$. 
+				$\forall n\in\mathbb{Z}$ is called \alert{$B$-smooth} if all its prime factors are no larger than $B$. 
+				Thus denote \alert{factor basis} as
+				$$\mathcal{F}(B) = \{ p\in\mathbb{N}: \text{prime and } p\leq B\}$$
+			\end{definition}
+			\begin{definition}
+				Given $\beta\in\mathbb{Z}_{>0}$.
+				$\forall f[X]\in\mathbb{F}_q[X]$ is called \alert{$\beta$-smooth} if all its irreducible factors are of degree no higher than $\beta$.
+				Thus denote respective \alert{factor basis} as
+				$$\mathcal{F}_q(\beta) = \{F[X]\in\mathbb{F}_q[X]: \text{irre. monic and of deg.}\leq \beta\}$$
+			\end{definition}
+		\end{frame}
+
+		\begin{frame}{Index Calculus Method - Framework of Following Algo.s}
+			\begin{itemize}
+				\item Given: $h \in  \mathbb{F}_Q^\times = \langle g\rangle$; Find: $\log_g h$
+					\pause
+				\item Process:
+					\begin{enumerate}
+						\item\textbf{Main Phase}
+						\begin{itemize}
+							\item<3-> Fix parameter $B$, thus $\mathcal{F}(B)$ is also given.
+							\item<4-> \alert{Smoothness Selection}: random $x\in[1, Q - 2]$ s.t. $g^x$ is $B$-smooth:
+								$$g^x = \prod_{p\in\mathcal{F}(B)} p^{v(p, x)}$$
+							\item<5-> \alert{Relation Collection}: 
+								take $\log_g\cdot$ on both sides and 	substitute $\log_g p$ by unknown variable $x_p$ 
+								(denoted as $\log_g p \leftrightarrow x_p$):
+								$$x \equiv \sum_{p\in\mathcal{F}(B)} v(p, x) x_p \mod Q - 1$$
+							\item<6-> \alert{Linea Algebra}: Solve system of linear equations.
+						\end{itemize}
+					\item
+						\textbf{Individual Logarithm}\\
+						\uncover<7->{
+						Find $y\in[1, Q-2]$ s.t. $g^y h$ is $B$-smooth.} 
+						\uncover<8->{Then factorization $g^y h = \prod p^{v_0(p)}$ implies
+						$$\log_g h \equiv \sum v_0(p) \log_g p - y \mod Q - 1$$.}
+					\end{enumerate}
+			\end{itemize}
+		\end{frame}
+
+		\begin{frame}{Coppersmith's Method}
+			\begin{itemize}
+				\item Given: $h \in \mathbb{F}_Q^\times = \langle g\rangle$ where $Q = q^k$; Find: $\log_g h$.
+					\pause
+				\item Process:
+					\begin{enumerate}
+						\item \textbf{Main Phase}
+							\begin{itemize}
+								\item<3-> Fix parameter $\beta$ then obtain $\mathcal{F}_q(\beta) = \{F(X):\cdots\}$. 
+									Find $n$ satisfying $q^{n-1} < k \leq q^n$, fix $n_1 + n_2 = n$. 								
+								\item<4-> Find $S(X)$ of deg.$\leq\beta$ s.t. $\exists I_k(X)|X^{q^n} - S(X)$ with a root $\alpha$.
+								\item<5-> \alert{Smoothness Selection}: random $A(X)$, $B(X)$ of deg.$\leq\beta$ s.t. 
+									both $C(X) = A(X) + X^{q^{n_1}}B(X)$ and $D(X) = C(X)^{q^{n_2}}$ %= A(X^{q^{n_2}}) + S(X)B(X^{q^{n_2}})$ 
+									are $\beta$-smooth, notice deg.$\leq q^{n_1} + \beta$ and $(q^{n_2} + 1)\beta$ respectively.
+								\item<6-> \alert{Relation Collection}: known
+									$$(\prod F(X)^{v(C, F)})^{q^{n_2}} \equiv \prod F(X)^{v(D, F)} \mod I_k(X)$$
+									\pause
+									$X \leftrightarrow \alpha$, take $\log_g\cdot$ on both sides, and $\log_g F(\alpha)\leftrightarrow x_F$
+									$$\sum(q^{n_2} v(C, F) - v(D, F)) x_F \equiv 0 \mod Q - 1$$
+								\item<7-> \alert{Linear Algebra}: Solve system of linear equations.
+							\end{itemize}
+						\item \textbf{Individual Logarithm} \uncover<8->{Descent Method.}
+					\end{enumerate}
+			\end{itemize}
+		\end{frame}
+		
+		%\begin{frame}{NFS}
+		%\end{frame}
+		
+		\begin{frame}{Joux, 2013}
+		\end{frame}
+		
+		\begin{frame}{BGJT, 2014}
+		\end{frame}
+%%% ----------------------------------------------------------------------------------- %%%
+	\subsection{Summary}
+		\begin{frame}{Paradigm with Transitions}
+			\begin{enumerate}
+				\item \textbf{Main Phase}
+				\begin{itemize}
+					\item Initiation: field extension brings freedom in presentation
+					\item Smoothness Selection: \\Randomly choose $\Rightarrow$ Sieve $\Rightarrow$ Generate
+					\item Relation Collection: \\Understanding the factor basis and (virtual) logarithms
+					\item Linear Algebra: Take advantage of the sparseness
+				\end{itemize}
+				\item \textbf{Individual Logarithm Phase}: Descent Strategy
+			\end{enumerate}
+		\end{frame}
+%%% =================================================================================== %%%
+\section{Research Plan}
+	\begin{frame}{Future Work}
+		\begin{itemize}
+			\item In Theory
+			\begin{itemize}
+				\item \textbf{Heuristics}: From assumption to rigorous.
+					\begin{itemize}
+						\item CWZ, 2014: Three Heuristics
+						\item Existence of $(S_0, S_1)$ s.t. $\exists I_k(X)|S_1(X)X^q - S_0(X)$.
+					\end{itemize}
+				\item \textbf{Construction of the finite fields}:
+					$\mathbb{F}_q[X]/\langle I_k[X]\rangle \Rightarrow \mathcal{O}_\mathbb{K}/P \Rightarrow$ ?
+				\item \textbf{Relation Obtaining}:\\
+					Balance two medium-deg. poly.s $\Rightarrow$ half-relation $\Rightarrow$ ? 
+				\item \textbf{Tiny Goal}:\\
+					Generalize small char. cases to medium and large ones? Truly poly. algo.?
+			\end{itemize}
+			\item In Practice: TBD.
+		\end{itemize}
+	\end{frame}
+\end{document}

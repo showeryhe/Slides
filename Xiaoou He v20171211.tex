@@ -1,0 +1,255 @@
+\documentclass{beamer}
+
+\mode<presentation>
+{
+	\usetheme{metropolis}
+}
+
+\usepackage[english]{babel}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{times}
+\usepackage[T1]{fontenc}
+
+\usepackage{amssymb, amsmath, amscd}
+\usepackage{mathrsfs, amsfonts}
+
+%\usepackage{color}
+%\usepackage[usenames,dvipsnames]{color}
+
+\title[Short Paper Title]
+{A Bird's Eye View\\on Discrete Logarithm Problems\\over Finite Fields}
+
+\author[He]
+{Xiao'ou He}
+
+\institute[Universities of Somewhere and Elsewhere]
+{Key Laboratory of Mathematics Mechanization, AMSS}
+
+\date[Annual 2017]
+{December 14, 2017}
+
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+  \tableofcontents[pausesections]
+\end{frame}
+
+%%% =================================================================================== %%%
+\section{Motivation}
+
+	\subsection{Origin of The Problem in Cryptography}
+		\begin{frame}{Public-Key Cryptography}
+			\begin{itemize}
+				\item
+					Proposed by Diffie and Hellman, 1976
+				\item
+					Based on number-theoretical hard problems
+					\begin{itemize}
+						\item
+							Integer Factorizations
+						\item
+							\alert{Discrete Logarithms}\\
+							Concerning with two class of groups:
+							\begin{enumerate}
+								\item
+									Elliptic curves
+								\item
+									\alert{Multiplicative groups of finite fields}
+							\end{enumerate}
+					\end{itemize}
+			\end{itemize}
+		\end{frame}
+%%% ----------------------------------------------------------------------------------- %%%
+	\subsection{Exposition of The Problem}
+		% I suppose that the vocabulary "exposition" seems more high-end than the vougor "description"
+		\begin{frame}{Case in General}
+			\begin{itemize}
+				\item
+					Cyclic group: $(G, \cdot) = <g>$.
+				\item
+					Exponential v. Logarithm
+					\begin{itemize}
+						\item
+							$x \mapsto h = g^x$
+						\item
+							$h \mapsto x = \log_g{h}$
+					\end{itemize}
+				\item
+					Generic Algorithms:\\
+					\begin{itemize}
+						\item
+							Pohlig-Hellman: Two reductions - CRT and $p^e$ to $p$
+						\item
+							Collision Making: Baby-step giant-step, Pollard's rho Method, etc.
+					\end{itemize}
+			\end{itemize}
+		\end{frame}
+		
+		\begin{frame}{Case over Finite Fields}
+			\begin{itemize}
+				\item
+					Given: $Q$, $g$ and $h$, where $<g> = \mathbb{F}_Q^\times$ containing $h$.
+				\item
+					Find: $\log_gh$.
+			\end{itemize}
+		\end{frame}
+%%% =================================================================================== %%%
+\section{Previous Work}
+%%% ----------------------------------------------------------------------------------- %%%
+	\subsection{Preliminaries}
+		\begin{frame}{The $\mathcal{L}$ Notation: Complexity}
+			$$\mathcal{L}_Q(\beta, c) = \exp((c + o(1))(\log Q)^\beta (\log\log Q)^{1-\beta})$$
+			\begin{itemize}
+				\item 
+					$c>0$ and $0 \le \beta \le 1$
+				\item
+					$\mathcal{L}_Q(0, c) = (\log Q)^{c + o(1)} = \text{poly}(\log Q$),\\
+					$\mathcal{L}_Q(1, c) = (\exp(\log Q))^{c+o(1)} = \text{exp}(\log Q)$. 
+				\item
+					When $0<\beta<1$, $\mathcal{L}_Q(\beta, c)$ is \textbf{sub-exponential}.
+			\end{itemize}
+		\end{frame}
+%%% ----------------------------------------------------------------------------------- %%%	
+	\subsection{Overview}		
+		\begin{frame}{Overview}
+			\begin{itemize}
+				\item
+					\textbf{Index Calculus Method}
+						\begin{itemize}
+							\item
+								1st sub-exp algo., complexity $\mathcal{L}_Q(\alert{\frac{1}{2}}, \cdot)$
+							\item
+								Adleman, 1979 and Pohlig, 1977 independently
+						\end{itemize}
+				\item
+					\textbf{Coppersmith's Method, 1984}
+						\begin{itemize}
+							\item
+								1st algo. of complexity $\mathcal{L}_Q(\alert{\frac{1}{3}}, \cdot)$.
+							\item
+								Originally $\mathbb{F}_{2^n}$, then generalized to prime powers (easily).
+						\end{itemize}
+				\item
+					\textbf{Function Field Sieve, 1999}
+						\begin{itemize}
+							\item
+								More general: used for several record breaking comutations.
+							\item
+								Adleman and Huang
+						\end{itemize}
+				\item
+					\textbf{Number Field Sieve}, 
+			\end{itemize}
+		\end{frame}
+		
+		\begin{frame}{Overview: Until 2013}
+			All cases solved in $\mathcal{L}_Q(\frac{1}{3}, \cdot)$
+			\begin{itemize}
+				\item
+					Small char.: function field sieve (FFS)
+				\item	
+					Medium and large char.: number field sieve (NFS)
+				\item
+					Measure: solve $p = \mathcal{L}_Q(\beta, c)$ where $Q = p^n$,\\
+					for relation between $\beta$ and $\frac{1}{3}$, $\frac{2}{3}$ % explain in detail
+			\end{itemize}
+		\end{frame}
+
+		\begin{frame}{Overview: Small Char.}
+			\begin{itemize}
+				\item
+					1st algo. of complexity $\mathcal{L}_Q(\alert{\frac{1}{4}}, \cdot)$:\\
+					Frobenius representation, Joux, 2013
+				\item
+					1st algo. of complexity \alert{quasi-poly}:\\
+					Barbulescu, 2014 % change of name
+			\end{itemize}
+		\end{frame}
+%%% ----------------------------------------------------------------------------------- %%%
+	\subsection{From Sub-exp to Quasi-poly}
+
+		\begin{frame}{Smooth - Set A Bound}
+			\begin{definition}
+				Given $B>0$. 
+				$\forall n\in\mathbb{Z}$ is called \alert{$B$-smooth} if all its prime factors are no larger than $B$. 
+				Thus denote \alert{factor basis} as
+				$$\mathcal{F}(B) = \{ p\in\mathbb{N}: \text{prime and } p\leq B\}$$
+			\end{definition}
+			\begin{definition}
+				Given $\beta\in\mathbb{Z}_{>0}$.
+				$\forall f[X]\in\mathbb{F}_q[X]$ is called \alert{$\beta$-smooth} if all its irreducible factors are of degree no higher than $\beta$.
+				Thus denote respective \alert{factor basis} as
+				$$\mathcal{F}_q(\beta) = \{ I_k\in\mathbb{F}_q[X]: \text{irre. monic and deg. } k\leq \beta\}$$
+			\end{definition}
+		\end{frame}
+
+		\begin{frame}{Index Calculus Method - Framework of Following Algo.}
+			\begin{itemize}
+				\item Given: $h \in  \mathbb{F}_Q^\times = <g>$; Find: $\log_g h$
+					\pause
+				\item Process:
+					\begin{enumerate}
+						\item\textbf{Main Phase}
+						\begin{itemize}
+							\item<3-> Fix parameter $B$, thus $\mathcal{F}(B)$ is also given.
+							\item<4-> \alert{Smoothness Selection}: random $x\in[1, Q - 2]$ s.t. $g^x$ is $B$-smooth:
+								$$g^x = \prod_{p\in\mathcal{F}(B)} p^{v(p, x)}$$
+							\item<5-> \alert{Relation Collection}: 
+								take $\log_g\cdot$ on both sides and 	substitute $\log_g p$ by unknown variable $x_p$ 
+								(denoted as $\log_g p \leftrightarrow x_p$):
+								$$x \equiv \sum_{p\in\mathcal{F}(B)} v(p, x) x_p \mod Q - 1$$
+							\item<6-> \alert{Linea Algebra}: Solve system of linear equations.
+						\end{itemize}
+					\item
+						\textbf{Individual Logarithm}\\
+						\uncover<7->{
+						Find $y\in[1, Q-2]$ s.t. $g^y h$ is $B$-smooth.} 
+						\uncover<8->{Then factorization $g^y h = \prod p^{v_0(p)}$ implies
+						$$\log_g h \equiv \sum v_0(p) \log_g p - y \mod Q - 1$$.}
+					\end{enumerate}
+			\end{itemize}
+		\end{frame}
+
+		\begin{frame}{Coppersmith's Method}
+			\begin{itemize}
+				\item Given: $h \in \mathbb{F}_Q^\times = <g>$ where $Q = q^k$; Find: $\log_g h$.
+					\pause
+				\item Process:
+					\begin{enumerate}
+						\item \textbf{Main Phase}
+							\begin{itemize}
+								\item<3-> Fix parameter $\beta$ then obtain $\mathcal{F}_q(\beta) = \{F(X):\cdots\}$. 
+									Find $n$ satisfying $q^{n-1} < k \leq q^n$, fix $n_1 + n_2 = n$. 								
+								\item<4-> Find $S(X)$ of deg.$\leq\beta$ s.t. $\exists I_k(X)|X^{q^n} - S(X)$ with a root $\alpha$.
+								\item<5-> \alert{Smoothness Selection}: random $A(X)$, $B(X)$ of deg.$\leq\beta$ s.t. 
+									both $C(X) = A(X) + X^{q^{n_1}}B(X)$ and $D(X) = C(X)^{q^{n_2}}$ %= A(X^{q^{n_2}}) + S(X)B(X^{q^{n_2}})$ 
+									are $\beta$-smooth, notice deg.$\leq q^{n_1} + \beta$ and $(q^{n_2} + 1)\beta$ respectively.
+								\item<6-> \alert{Relation Collection}: known
+									$$(\prod F(X)^{v(C, F)})^{q^{n_2}} \equiv \prod F(X)^{v(D, F)} \mod I_k(X)$$
+									\pause
+									$X \leftrightarrow \alpha$, take $\log_g\cdot$ on both sides, and $\log_g F(\alpha)\leftrightarrow x_F$
+									$$\sum(q^{n_2} v(C, F) - v(D, F)) x_F \equiv 0 \mod Q - 1$$
+								\item<7-> \alert{Linear Algebra}: Solve system of linear equations.
+							\end{itemize}
+						\item \textbf{Individual Logarithm} \uncover<8->{Descent Method.}
+					\end{enumerate}
+			\end{itemize}
+		\end{frame}
+		
+		\begin{frame}{NFS}
+		\end{frame}
+		
+		\begin{frame}{Joux 13 and Barbulescu 14}
+		\end{frame}
+
+\section{Research Plan}
+
+
+\end{document}
