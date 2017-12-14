@@ -1,0 +1,455 @@
+\documentclass{beamer}
+
+\mode<presentation>
+{
+	\usetheme{metropolis}
+}
+
+\usepackage[english]{babel}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{times}
+\usepackage[T1]{fontenc}
+
+\usepackage{amssymb, amsmath, amscd}
+\usepackage{mathrsfs, amsfonts}
+
+\usepackage[all, pdf]{xy}
+%\usepackage{cite}
+\usecolortheme{rose}
+%\usepackage{color}
+%\usepackage[usenames,dvipsnames]{color}
+
+
+\title[Short Paper Title]
+{A Bird's Eye View\\on Discrete Logarithm Problems (DLP)\\over Finite Fields}
+
+\author[He]
+{Xiao'ou He}
+
+\institute[Universities of Somewhere and Elsewhere]
+{Key Laboratory of Mathematics Mechanization, AMSS}
+
+\date[Annual 2017]
+{December 14, 2017}
+
+\AtBeginSubsection[]
+{
+  \begin{frame}<beamer>{Outline}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+\begin{document}
+
+\bibliographystyle{abbrv}
+%\bibliography{dlp v20171212}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+  \tableofcontents[pausesections]
+\end{frame}
+
+%%% =================================================================================== %%%
+\section{Motivation}
+
+	\subsection{DLP in Cryptography}
+		\begin{frame}{DLP in Cryptography}
+			\begin{itemize}
+				\item
+					Key-exchange scheme [Diffie and Hellman, 1976]
+					\pause
+				\item
+					Encryption algorithm [ElGamal, 1985]
+					\pause
+				\item
+					Digital Signature Algorithm (DSA) [NIST, 1991]
+			\end{itemize}
+		\end{frame}
+%%% ----------------------------------------------------------------------------------- %%%
+	\subsection{Exposition of The Problem}
+		% I suppose that the vocabulary "exposition" seems more high-end than the vougor "description"
+		\begin{frame}{Case in General}
+			\begin{itemize}
+				\item
+					Cyclic group: $(G, \cdot) = \langle g\rangle$
+					\pause
+				\item
+					Based on number-theoretical hard problem
+					\pause
+					\begin{itemize}
+						\item
+							$\mathbb{Z} \rightarrow G, x \mapsto h = g^x$
+						\item
+							$G \rightarrow \mathbb{Z}, h \mapsto x = \log_g{h}$
+					\end{itemize}
+					\pause
+				\item
+					Generic Algorithms - $O(\exp(\log|G|))$\\
+					\begin{itemize}
+						\item
+							Pohlig-Hellman
+						\item
+							Collision Making\\
+							Shanks' baby-step giant-step, Pollard's $\rho$, etc.
+					\end{itemize}
+					\pause
+				\item
+					Concerning with two class of groups
+						\begin{enumerate}
+							\item
+								Elliptic curves
+							\item
+								\alert{Multiplicative groups of finite fields}
+						\end{enumerate}
+			\end{itemize}
+		\end{frame}
+		
+		\begin{frame}{Case over Finite Fields}
+			\begin{itemize}
+				\item
+					Given: $Q$, $g$ and $h$, where $\langle g\rangle = \mathbb{F}_Q^\times$ containing $h$
+				\item
+					Find: $\log_gh$
+			\end{itemize}
+		\end{frame}
+%%% =================================================================================== %%%
+\section{Previous Work}
+%%% ----------------------------------------------------------------------------------- %%%
+	\subsection{Preliminaries}
+		\begin{frame}{Complexity}
+			\begin{block}{The $\mathcal{L}$ Notation}
+				$$\mathcal{L}_Q(\alpha) = \exp(O((\log Q)^\alpha (\log\log Q)^{1-\alpha}))$$
+				\begin{itemize}
+					\item 
+						$0 \le \alpha \le 1$
+						\pause
+					\item
+						$\mathcal{L}_Q(\alert{0}) = (\log Q)^{O(1)} = \text{poly}(\log Q$),\\
+						$\mathcal{L}_Q(\alert{1}) = (\exp(\log Q))^{O(1)} = \text{exp}(\log Q)$
+						\pause
+					\item
+						When $0<\alpha<1$, $\mathcal{L}_Q(\alpha)$ is \textbf{sub-exponential}
+				\end{itemize}
+			\end{block}
+			\pause
+			\begin{block}{Quasi-poly}
+				$(\log Q)^{O(\log\log Q)}$ is \textbf{quasi-polynomial}, 
+				which is smaller than any $\mathcal{L}_Q(\alpha)$ for $\alpha >0$.
+			\end{block}
+		\end{frame}
+%%% ----------------------------------------------------------------------------------- %%%	
+	\subsection{From Sub-exp to Quasi-poly}		
+		\begin{frame}{Overview}
+			\begin{block}{$\mathcal{L}_Q(\alert{\frac{1}{2}})$ \textbf{Index Calculus Method}}
+				[Pohlig, 1977] and [Adleman, 1979] independently
+			\end{block}
+			\pause
+			\begin{block}{$\mathcal{L}_Q(\alert{\frac{1}{3}})$ by [\textbf{Coppersmith, 1984]}}
+				\begin{itemize}
+						\item
+							Originally $\mathbb{F}_{2^n}$
+						\item
+							\textbf{Number Field Sieve} by [Gordon, 1993]
+						\item
+							\textbf{Function Field Sieve} by [Adleman and Huang, 1999]
+				\end{itemize}
+			\end{block}
+			\pause
+			\begin{block}{$\mathcal{L}_Q(\alert{\frac{1}{4}})$ by [Joux, 2013] to \alert{quasi-poly} by [BGJT@EC'14]}
+				\begin{itemize}
+					\item 
+						Originated from [Joux and Lercier@EC'06]
+					\item
+						For small char., roughly $p \leq \mathcal{L}_Q(\frac{1}{3})$.
+					\item
+						Heuristics
+				\end{itemize}
+			\end{block}
+		\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		\begin{frame}{Smooth - Set A Bound}
+			\begin{definition}
+				Given $B>0$. 
+				$\forall n\in\mathbb{Z}$ is called \alert{$B$-smooth} if all its prime factors are no larger than $B$. 
+				Thus denote \alert{factor basis} as
+				$$\mathcal{F}(B) = \{ p\in\mathbb{N}: \text{prime and } p\leq B\}$$
+			\end{definition}
+			\pause
+			\begin{definition}
+				Given $B\in\mathbb{Z}_{>0}$.
+				$\forall f[X]\in\mathbb{F}_q[X]$ is called \alert{$B$-smooth} if all its irreducible factors are of degree no higher than $B$.
+				Thus denote respective \alert{factor basis} as
+				$$\mathcal{F}_q(B) = \{F[X]\in\mathbb{F}_q[X]: \text{irr. monic and of }\deg\leq B\}$$
+			\end{definition}
+		\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		\begin{frame}{Index Calculus Method - Framework of Following Algorithms}
+			\begin{itemize}
+				\item Given: $h \in  \mathbb{F}_Q^\times = \langle g\rangle$; Find: $\log_g h$
+					\pause
+				\item Process:
+					\begin{enumerate}
+						\item\textbf{Main Phase}
+						\begin{itemize}
+							\item<3-> \alert{Initialization} Fix parameter $B$, thus $\mathcal{F}(B)$ is also given.
+							\item<4-> \alert{Smoothness Selection} Random $c\in[1, Q - 2]$ s.t. $g^c$ is $B$-smooth:
+								$$g^c = \prod_{p\in\mathcal{F}(B)} p^{v(p, c)}$$
+							\item<5-> \alert{Relation Collection} 
+								Take $\log_g$ on both sides and substitute $\log_g p$ by unknown variable $x_p$ 
+								(denoted as $\log_g p \leftarrow x_p$):
+								$$c \equiv \sum_{p\in\mathcal{F}(B)} v(p, c) x_p \mod Q - 1$$
+							\item<6-> \alert{Linea Algebra} Solve system of linear equations.
+						\end{itemize}
+						\item\textbf{Individual Logarithm}\\
+						\uncover<7->{
+						Find $b\in[1, Q-2]$ s.t. $g^b h$ is $B$-smooth. 
+						\uncover<8->{Then factorization $g^b h = \prod p^{v_0(p)}$ implies
+						$$\log_g h \equiv \sum v_0(p) \log_g p - b \mod Q - 1$$.}}
+					\end{enumerate}
+			\end{itemize}
+		\end{frame}
+
+%		\begin{frame}{Index Calculus Method - Review}
+%			\begin{block}{Given: $h \in  \mathbb{F}_Q^\times = \langle g\rangle$}
+%				To find $\log_g h$, it suffices to find $\log_g F$ for $F\in\mathcal{F}$.\\
+%				\pause
+%				With $\prod_{F\in\mathcal{F}} F^{v(F)} = 1$, \pause we have
+%					$$\sum_{F\in\mathcal{F}} v(F) \log_g F \equiv 0 \mod Q-1$$
+%				and treat it as linear equation $\sum_{F\in\mathcal{F}} v(F) x_F \equiv 0 \mod Q-1$.
+%			\end{block}
+%		\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		\begin{frame}{Coppersmith's Method - $\mathbb{F}_Q = \mathbb{F}_q[X]/\langle I_k(X)\rangle = \mathbb{F}(\alpha)$}
+			\begin{itemize}
+				\item Given: $h \in \mathbb{F}_Q^\times = \langle g\rangle$ where $Q = p^k$; Find: $\log_g h$.
+					\pause
+				\item Process:
+					\begin{enumerate}
+						\item \textbf{Main Phase}
+							\begin{itemize}
+								\item<3-> 
+									\alert{Initialization} 
+									Fix $B$ then obtain $\mathcal{F}_q(B)$.\\
+									Find $n$ satisfying $p^{n-1} < k \leq p^n$, fix $n_1 + n_2 = n$.\\
+									\uncover<4->{
+										Find $S(X)$ of $\deg\leq B$ s.t. \textcolor{mLightGreen}{$\exists I_k(X)|X^{p^n} - S(X)$} with a root $\alpha$.}
+								\item<5-> \alert{Smoothness Selection} 
+									Random $G_1(X)$, $G_2(X)$ of $\deg\leq B$ s.t. 
+									both $C(X) = G_1(X) + X^{p^{n_1}}G_2(X)$ and $D(X) = C(X)^{p^{n_2}}$ %= A(X^{q^{n_2}}) + S(X)B(X^{q^{n_2}})$ 
+									are $B$-smooth, notice $\deg\leq p^{n_1} + B$ and $(p^{n_2} + 1)B$ respectively.
+								\item<6-> \alert{Relation Collection} Known
+									$$(\prod F(X)^{v(C, F)})^{p^{n_2}} \equiv \prod F(X)^{v(D, F)} \mod I_k(X)$$
+									$X \leftarrow \alpha$, take $\log_g$ on both sides, and $\log_g F(\alpha)\leftarrow x_F$
+									$$\sum(p^{n_2} v(C, F) - v(D, F)) x_F \equiv 0 \mod Q - 1$$
+								\item<7-> \alert{Linear Algebra} Solve system of linear equations.
+							\end{itemize}
+						\item \textbf{Individual Logarithm Phase} \uncover<8->{Descent strategy}
+					\end{enumerate}
+			\end{itemize}
+		\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		\begin{frame}{Joux\&Lercier@EC'06}
+			\begin{block}{Given: $h\in\mathbb{F}_Q^\times =\langle g\rangle$ where $Q = q^k$}
+			Find $S_1(X)$, $S_2(X)\in\mathbb{F}_q[X]$ s.t. $\exists \textcolor{mLightGreen}{I_k(X)|X - S_1(S_2(X))}$, a root $\alpha$.
+			Let $\beta = S_2(\alpha)$, then $\exists\textcolor{mLightGreen}{J_k(Y)|Y-S_2(S_1(Y))}$ with root $\beta$.
+			\pause
+			$$\xymatrix{
+				& \mathbb{F}_q[X, Y] \ar[dl]_{\mod Y - S_2(X)} \ar[dr]^{\mod X - S_1(Y)} & \\
+				\mathbb{F}_q[X] \ar[dr]_{\mod X - \alpha} & & \mathbb{F}_q[Y] \ar[dl]^{\mod Y - \beta} \\
+				& \mathbb{F}_Q & 
+			}$$
+			\pause
+			Start with $G_1(Y)X+G_2(Y)$, we will reach the relation
+			$$G_1(S_2(\alpha))\alpha+G_2(S_1(\alpha)) = G_1(\beta)S_1(\beta)+G_2(\beta)$$
+			\end{block}
+		\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%		
+		\begin{frame}{Joux\&Lercier@EC'06}
+			\begin{itemize}
+				\item
+					Given: $h\in\mathbb{F}_Q^\times = \langle g\rangle$ where $Q = q^k$; Find: $\log_g h$
+				\item
+					Process:
+					\begin{enumerate}
+						\item
+							\textbf{Main Phase}
+						\begin{itemize}
+							\item
+								\alert{Initialization} 
+								Fix parameter $B$ then obtain $\mathcal{F}_q(B)$. 
+								Find $S_1(X)$, $S_2(X)\in\mathbb{F}_q[X]$ of $\deg$ $d_1$, $d_2$ 
+								satisfying $d_1d_2\geq k$ s.t. 
+								$\exists \textcolor{mLightGreen}{I_k(X)|X - S_1(S_2(X))}$ 
+								with a root $\alpha$
+							\item
+								\alert{Smoothness Selection} 
+								Random $G_1(X)$, $G_2(X)$ of $\deg\leq B$ s.t. 
+								both $G_1(S_2(X))X+G_2(S_1(X))$ and $G_1(X)S_1(X)+G_2(X)$ are $B$-smooth, 
+								notice $\deg\leq B d_2 + 1$, $B d_1$ respectively.
+							\item
+								\alert{Relation Collection} Known
+								$G_1(S_2(\alpha))\alpha+G_2(S_1(\alpha)) = G_1(\beta)S_1(\beta)+G_2(\beta)$
+								and smoothness implies 
+								$\prod F(\alpha)^{v(F)} = \prod F(\beta)^{w(F)}$.
+								Then take $\log_g$ and $F(\alpha)\leftarrow x_F$, $F(\beta)\leftarrow y_F$
+								$$\sum v(F) x_F \equiv \sum w(F) y_F \mod Q-1$$
+							\item
+								\alert{Linear Algebra} Solve system of linear equations.
+						\end{itemize}
+						\item
+							\textbf{Individual Logarithm Phase} Descent strategy.
+					\end{enumerate}
+			\end{itemize}
+		\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%		
+		\begin{frame}{[Joux, 2013] and [BGJT@EC'14] - Half Relation}
+			\begin{block}{Given: $h\in\mathbb{F}_Q^\times =\langle g\rangle$ where $Q = q^k$ and $q>k$}
+				Take advantage of the itentity
+				$X^q - X = \prod_{\gamma\in\mathbb{F}_q} (X - \gamma)$.\\
+				\pause
+				Find $S(X)\in\mathbb{F}_q$ s.t. $\exists\textcolor{mLightGreen}{I_k(X)|X^q - S(X)}$ with a root $\alpha$.
+				$$\xymatrix{
+					& \mathbb{F}_q[X, Y] \ar[dl]_{\mod Y - X^q} \ar[dr]^{\mod Y - S(X)} & \\
+					\mathbb{F}_q[X] \ar[dr]_{\mod X - \alpha} & & \mathbb{F}_q[Y] \ar[dl]^{\mod X - \alpha}\\
+					& \mathbb{F}_Q &
+				}$$
+				\pause
+				From $G_1(Y)G_2(X)-G_1(X)G_2(Y)$ we can reach the relation
+				$$\prod_{\gamma\in\mathbb{F}_q}(G_1(\alpha)-\gamma G_2(\alpha)) = G_1(S(\alpha))G_2(\alpha) - G_1(\alpha)G_2(S(\alpha))$$
+			\end{block}
+		\end{frame}
+
+		\begin{frame}{[Joux, 2013] and [BGJT@EC'14]}
+			\begin{itemize}
+				\item
+					Given: $h\in\mathbb{F}_Q^\times =\langle g\rangle$ where $Q = q^k$ and $q>k$; Find: $\log_g h$\\
+				\item
+					Process
+					\begin{enumerate}
+						\item\textbf{Main Phase}
+						\begin{itemize}
+							\item
+								\alert{Initialization} 
+									Fix parameter $B$ then we obtain $\mathcal{F}_q(B)$
+									Find $S(X)\in\mathbb{F}_q$ of $\deg\leq B$ s.t. 
+									$\exists\textcolor{mLightGreen}{I_k(X)|X^q - S(X)}$ with a root $\alpha$.
+							\item
+								\alert{Smoothness Selection} 
+								Random $G_1(X)$, $G_2(X)$ of $\deg\leq B$ s.t. 
+								$G_1(S_2(X))G_2(X) - G_1(X)G_2(S(X))$ is $B$-smooth, 
+								notice $\deg\leq B(B+1)$.
+							\item
+								\alert{Relation Collection} Known
+								$\prod_{\gamma\in\mathbb{F}_q}(G_1(\alpha)-\gamma G_2(\alpha)) = G_1(S(\alpha))G_2(\alpha) - G_1(\alpha)G_2(S(\alpha))$
+								and smoothness implies 
+								$\prod (G_1(\alpha)-\gamma G_2(\alpha)) = \prod F(\alpha)^{v(F)}$.
+								Then take $\log_g$ and $G_1(\alpha)-\gamma G_2(\alpha)\leftarrow x_\gamma$, $F(\alpha)\leftarrow x_F$
+								$$\sum x_\gamma \equiv \sum v(F) x_F \mod Q-1$$
+							\item
+								\alert{Linear Algebra} Solve system of linear equations.
+						\end{itemize}
+						\item\textbf{Individual Logarithm Phase} Descent strategy.
+					\end{enumerate}
+			\end{itemize}
+		\end{frame}
+%%% ----------------------------------------------------------------------------------- %%%
+	\subsection{Summary}
+		\begin{frame}{Paradigm with Transitions}
+			\begin{enumerate}
+				\item \textbf{Main Phase}
+				\begin{itemize}
+					\item 
+						\alert{Initiation} 
+							\uncover<2->{Field extension brings freedom in presentation}
+					\item 
+						\alert{Smoothness Selection}
+							\uncover<3->{Randomly choose $\Rightarrow$ Sieve}
+					\item
+						\alert{Relation Collection}\\
+							\uncover<4->{Understanding (virtual) logarithms}
+					\item \alert{Linear Algebra} 
+							\uncover<5->{Take advantage of the sparseness}
+				\end{itemize}
+				\item \textbf{Individual Logarithm Phase} \uncover<6->{Descent Strategy}
+			\end{enumerate}
+		\end{frame}
+%%% =================================================================================== %%%
+\section{Research Plan}
+	\begin{frame}{Preparations}
+		\begin{itemize}
+			\item
+				\textbf{Algorithm}\\
+				\uncover<2->{\emph{Algorithmic Cryptanalysis} by Joux\\
+				Course taken: Computational Number Theory}
+			\item
+				\textbf{Number theory}\\
+				\uncover<2->{\emph{A Classical Introduction to Modern Number Theory}\\
+				by Kenneth, Ireland and Rosen}
+			\item
+				\textbf{Polynomials over finite fields}
+				\uncover<2->{2017 summer schools}
+			\item
+				\textbf{Lattice}
+				\uncover<2->{Lectures}
+			\item
+				\textbf{Algebraic geometry}
+				\uncover<2->{Course taken}				
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}{Research Plan}
+		\begin{itemize}
+			\item \textbf{Heuristics}: From assumption to rigorous.\\
+				CWZ, 2014: Three Heuristics
+				\pause
+			\item \textbf{Relation obtaining}\\
+				Use other identities in finite fields and number theory.
+				\pause
+			\item \textbf{As for other characteristics}\\
+				Generalization of FFS and NFS.
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}
+		Thank you! Any questions?
+	\end{frame}
+	
+	\begin{frame}{References}
+		\tiny{\begin{enumerate}
+			\item
+				Diffie W., Hellman M.E., \emph{New directions in cryptography},
+				IEEE Trans. Inf. Theory, \textbf{22}(6), 644-654(1976). 
+			\item
+				Adleman L., \emph{A subexponential algorithm for the discrete logarithm problem with applications to cryptography},
+				In: Proceedings of the 20th Annual Syposium on Foundations of Computer Science: FOCS'79, 55-60.
+			\item
+				Coppersmith D., \emph{Fast evaluation of logarithms in fields of characteristic two},
+				IEEE Trans. Inf. Theory, \textbf{30}(4): 587-593(1984).
+			\item
+				ElGmal T., \emph{A publick key cryptosystem and a signature scheme based on discrete logarithms},
+				IEEE Trans. Inf. Theory, \textbf{31}(4): 469-472(1985).
+			\item
+				Adleman L., Huang M.D., \emph{Function field sieve method for discrete logarithms over finite fields},
+				Inf. Comput., \textbf{151}(1-2): 5-16(1999).
+			\item
+				Joux A., Lercier R., \emph{The function field sieve in the medium prime case},
+				In:Advances in Cryptography: EUROCRYPT'2006, 254-270.
+			\item
+				Joux A., \emph{A new index calculus algorithm with complexity $\mathcal{L}(1/4 + o(1))$ in small characteristic},
+				In: Selected Areas in Cryptography: SAC'2013, 355-379.
+			\item
+				
+			\item
+				Barculescu R., Gaudry P., Joux A., Thom$\acute{\text{e}}$ E., \emph{A heuristic quasi-polynomial algorithm for discrete logarithm in finite fields of small characteristic}, In: Advances in Cryptography: EUROCRYPT'2014, 1-16.
+			\item
+				Joux A., Pierrot C., \emph{Technical history of discrete logarithms in small characteristic finite fields}, 
+				Des. Codes Cryptogr. \textbf{78}: 73-85(2016).
+			\end{enumerate}
+			}
+	\end{frame}
+\end{document}
